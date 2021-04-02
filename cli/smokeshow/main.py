@@ -19,7 +19,9 @@ USER_AGENT = f'smokeshow-cli-v{VERSION}'
 KEY_HASH_THRESHOLD_POW = 234
 KEY_HASH_THRESHOLD = 2 ** KEY_HASH_THRESHOLD_POW
 ROOT_URL = 'https://smokeshow.helpmanual.io'
-cli = Typer(name='smokeshow', help='smokeshow CLI, see https://smokeshow.helpmanual.io for more information.')
+cli = Typer(
+    name='smokeshow', help=f'smokeshow CLI v{VERSION}, see https://smokeshow.helpmanual.io for more information.'
+)
 
 
 @cli.command(help='Generate a new upload key')
@@ -110,11 +112,11 @@ async def upload(
 
         if root_path.is_dir():
             coros = [upload_file(p, p.relative_to(root_path)) for p in root_path.glob('**/*') if p.is_file()]
-            print(f'Site created with root {upload_root}, uploading {len(coros)} files...')
+            print(f'Site created with root {upload_root}\nuploading {len(coros)} files...')
             total_size = max(await asyncio.gather(*coros))
         else:
             # root_path is a file
-            print(f'Site created with root {upload_root}, uploading 1 file...')
+            print(f'Site created with root {upload_root}\nuploading 1 file...')
             total_size = await upload_file(root_path, root_path.name)
 
         print(f'upload complete ✓ site size {fmt_size(total_size)}')
